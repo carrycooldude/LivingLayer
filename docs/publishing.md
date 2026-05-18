@@ -46,3 +46,35 @@ Before public release, add:
 ```
 
 The script uses `gradlew.bat` when present, then falls back to a global `gradle` executable.
+
+## GitHub Packages
+
+The package is configured for:
+
+```text
+https://maven.pkg.github.com/carrycooldude/LivingLayer
+```
+
+Publish:
+
+```powershell
+.\scripts\publish-github-package.ps1
+```
+
+Consume:
+
+```kotlin
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/carrycooldude/LivingLayer")
+        credentials {
+            username = gprUser
+            password = gprToken
+        }
+    }
+}
+
+dependencies {
+    implementation("io.livinglayer:livinglayer:1.0.0-alpha01")
+}
+```

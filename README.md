@@ -10,6 +10,12 @@ LivingLayer is an Android-first graphics framework for building premium, motion-
 implementation("io.livinglayer:livinglayer:1.0.0-alpha01")
 ```
 
+GitHub Packages feed:
+
+```text
+https://maven.pkg.github.com/carrycooldude/LivingLayer
+```
+
 ## Quick Start
 
 ```kotlin
