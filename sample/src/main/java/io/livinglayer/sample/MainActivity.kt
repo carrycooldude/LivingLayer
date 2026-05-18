@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +17,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -38,6 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.text.BasicText
 import io.livinglayer.LivingLayer
+import io.livinglayer.adaptive.AdaptiveInterfaceEngine
+import io.livinglayer.adaptive.AdaptiveInterfaceRequest
+import io.livinglayer.adaptive.InterfaceContext
 import io.livinglayer.compose.LivingIcon
 import io.livinglayer.core.LivingLayerConfig
 
@@ -53,6 +62,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun LivingLayerSample() {
     val icon = LivingLayerPainter()
+    var screen by remember { mutableStateOf(SampleScreen.Icons) }
 
     Box(
         modifier = Modifier
@@ -82,17 +92,200 @@ private fun LivingLayerSample() {
                 )
             )
             Spacer(modifier = Modifier.height(32.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                DemoTile("Glass", icon, LivingLayerConfig(depth = 18f, shader = io.livinglayer.core.LivingShaderPreset.Glass))
-                DemoTile("Neon", icon, LivingLayerConfig(depth = 30f, glow = true, bloom = true, shader = io.livinglayer.core.LivingShaderPreset.Neon))
-                DemoTile("Holo", icon, LivingLayerConfig(depth = 24f, reflections = true, shader = io.livinglayer.core.LivingShaderPreset.Hologram))
+            SampleTabs(selected = screen, onSelect = { screen = it })
+            Spacer(modifier = Modifier.height(28.dp))
+
+            when (screen) {
+                SampleScreen.Icons -> IconSample(icon)
+                SampleScreen.Adaptive -> AdaptiveSample(icon)
             }
         }
     }
+}
+
+@Composable
+private fun SampleTabs(
+    selected: SampleScreen,
+    onSelect: (SampleScreen) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .border(
+                width = 1.dp,
+                color = Color(0x3358E6FF),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(4.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        SampleTab("Icons", selected == SampleScreen.Icons) {
+            onSelect(SampleScreen.Icons)
+        }
+        Spacer(modifier = Modifier.width(4.dp))
+        SampleTab("Adaptive", selected == SampleScreen.Adaptive) {
+            onSelect(SampleScreen.Adaptive)
+        }
+    }
+}
+
+@Composable
+private fun SampleTab(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .background(
+                color = if (selected) Color(0x2258E6FF) else Color.Transparent,
+                shape = RoundedCornerShape(6.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = if (selected) Color(0x7758E6FF) else Color.Transparent,
+                shape = RoundedCornerShape(6.dp)
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 18.dp, vertical = 10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        BasicText(
+            text = label,
+            style = TextStyle(
+                color = if (selected) Color(0xFFF4F7FB) else Color(0xFF8BA3AF),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium
+            )
+        )
+    }
+}
+
+@Composable
+private fun IconSample(icon: Painter) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        DemoTile("Glass", icon, LivingLayerConfig(depth = 18f, shader = io.livinglayer.core.LivingShaderPreset.Glass))
+        DemoTile("Neon", icon, LivingLayerConfig(depth = 30f, glow = true, bloom = true, shader = io.livinglayer.core.LivingShaderPreset.Neon))
+        DemoTile("Holo", icon, LivingLayerConfig(depth = 24f, reflections = true, shader = io.livinglayer.core.LivingShaderPreset.Hologram))
+    }
+}
+
+@Composable
+private fun AdaptiveSample(icon: Painter) {
+    var context by remember { mutableStateOf(InterfaceContext.Focused) }
+    val adaptive = remember(context) {
+        AdaptiveInterfaceEngine().generate(
+            AdaptiveInterfaceRequest(
+                id = "sample-${context.name.lowercase()}",
+                context = context,
+                motionAware = context != InterfaceContext.Performance,
+                holographic = context != InterfaceContext.Performance
+            )
+        )
+    }
+    val config = adaptive.surface.config
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(horizontalArrangement = Arrangement.Center) {
+            AdaptiveModeButton("Ambient", context == InterfaceContext.Ambient) {
+                context = InterfaceContext.Ambient
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            AdaptiveModeButton("Focused", context == InterfaceContext.Focused) {
+                context = InterfaceContext.Focused
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            AdaptiveModeButton("Perf", context == InterfaceContext.Performance) {
+                context = InterfaceContext.Performance
+            }
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+        Box(
+            modifier = Modifier
+                .size(148.dp)
+                .border(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        colors = listOf(Color(0x8858E6FF), Color(0x55B86CFF), Color(0x331DB954))
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            LivingIcon(
+                icon = icon,
+                modifier = Modifier.size(132.dp),
+                config = config
+            )
+        }
+        Spacer(modifier = Modifier.height(18.dp))
+        InfoLine("Context", context.name)
+        InfoLine("Depth", config.depth.toInt().toString())
+        InfoLine("Glow", config.glow.toString())
+        InfoLine("Bloom", config.bloom.toString())
+        InfoLine("Motion", config.gyroscope.toString())
+    }
+}
+
+@Composable
+private fun AdaptiveModeButton(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .background(
+                color = if (selected) Color(0x2238FFB8) else Color(0x00000000),
+                shape = RoundedCornerShape(6.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = if (selected) Color(0xAA58E6FF) else Color(0x3358E6FF),
+                shape = RoundedCornerShape(6.dp)
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 9.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        BasicText(
+            text = label,
+            style = TextStyle(
+                color = if (selected) Color(0xFFF4F7FB) else Color(0xFF9BB0BA),
+                fontSize = 12.sp
+            )
+        )
+    }
+}
+
+@Composable
+private fun InfoLine(
+    label: String,
+    value: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 54.dp, vertical = 3.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        BasicText(
+            text = label,
+            style = TextStyle(color = Color(0xFF778B96), fontSize = 12.sp)
+        )
+        BasicText(
+            text = value,
+            style = TextStyle(color = Color(0xFFDCEBF2), fontSize = 12.sp, fontWeight = FontWeight.Medium)
+        )
+    }
+}
+
+private enum class SampleScreen {
+    Icons,
+    Adaptive
 }
 
 @Composable
