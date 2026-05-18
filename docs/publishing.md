@@ -24,7 +24,7 @@ publishing {
         create<MavenPublication>("release") {
             groupId = "io.livinglayer"
             artifactId = "livinglayer"
-            version = "1.0.0-alpha01"
+            version = "1.0.0-alpha02"
         }
     }
 }
@@ -75,6 +75,6 @@ repositories {
 }
 
 dependencies {
-    implementation("io.livinglayer:livinglayer:1.0.0-alpha01")
+    implementation("io.livinglayer:livinglayer:1.0.0-alpha02")
 }
 ```

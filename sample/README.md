@@ -3,7 +3,7 @@
 This Android app consumes the published Maven Local package:
 
 ```kotlin
-implementation("io.livinglayer:livinglayer:1.0.0-alpha01")
+implementation("io.livinglayer:livinglayer:1.0.0-alpha02")
 ```
 
 Run:

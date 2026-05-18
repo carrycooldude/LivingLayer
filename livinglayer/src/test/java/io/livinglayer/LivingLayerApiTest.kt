@@ -18,7 +18,7 @@ import org.junit.Test
 class LivingLayerApiTest {
     @Test
     fun exposesPackageVersionAndCapabilities() {
-        assertEquals("1.0.0-alpha01", LivingLayerVersion.version)
+        assertEquals("1.0.0-alpha02", LivingLayerVersion.version)
         assertTrue(io.livinglayer.LivingLayer.capabilities.generations.contains(LivingLayerGeneration.V5AdaptiveInterfaces))
     }
 

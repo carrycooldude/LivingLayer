@@ -34,6 +34,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.animation:animation-core:1.7.0")
     implementation("androidx.compose.ui:ui:1.7.0")
     implementation("androidx.compose.foundation:foundation:1.7.0")
 
@@ -60,7 +61,7 @@ publishing {
         create<MavenPublication>("release") {
             groupId = "io.livinglayer"
             artifactId = "livinglayer"
-            version = "1.0.0-alpha01"
+            version = "1.0.0-alpha02"
 
             afterEvaluate {
                 from(components["release"])

@@ -27,9 +27,8 @@ class VulkanBackend private constructor() : RenderBackend {
             )
 
             override fun render(scope: DrawScope, surface: LivingSurface) {
-                error("Vulkan backend is not bundled in livinglayer:1.0.0-alpha01.")
+                error("Vulkan backend is not bundled in livinglayer:1.0.0-alpha02.")
             }
         }
     }
 }
-

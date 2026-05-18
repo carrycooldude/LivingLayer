@@ -2,7 +2,7 @@ package io.livinglayer.core
 
 object LivingLayerVersion {
     const val name: String = "LivingLayer"
-    const val version: String = "1.0.0-alpha01"
+    const val version: String = "1.0.0-alpha02"
     const val packageName: String = "io.livinglayer"
 }
 
@@ -21,4 +21,3 @@ data class LivingLayerCapabilities(
     val launcherSurfaces: Boolean = true,
     val adaptiveInterfaces: Boolean = true
 )
-

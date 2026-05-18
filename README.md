@@ -11,7 +11,7 @@ LivingLayer is a GPU-native reactive Android UI layer framework for Jetpack Comp
 ## Install
 
 ```kotlin
-implementation("io.livinglayer:livinglayer:1.0.0-alpha01")
+implementation("io.livinglayer:livinglayer:1.0.0-alpha02")
 ```
 
 GitHub Packages feed:

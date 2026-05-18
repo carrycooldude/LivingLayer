@@ -69,7 +69,7 @@ private fun LivingLayerSample() {
             )
             Spacer(modifier = Modifier.height(8.dp))
             BasicText(
-                text = "Package ${LivingLayer.version}",
+                text = "Tilt your phone. Package ${LivingLayer.version}",
                 style = TextStyle(
                     color = Color(0xFF8BA3AF),
                     fontSize = 14.sp
