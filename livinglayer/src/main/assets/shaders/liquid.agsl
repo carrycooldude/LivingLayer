@@ -1,0 +1,10 @@
+uniform shader content;
+uniform float time;
+uniform float2 resolution;
+
+half4 main(float2 coord) {
+    float2 uv = coord / resolution;
+    float wave = sin((uv.x + uv.y) * 18.0 + time * 2.0) * 2.5;
+    return content.eval(coord + float2(wave, wave * 0.45));
+}
+

@@ -1,0 +1,12 @@
+uniform shader content;
+uniform float time;
+uniform float2 resolution;
+
+half4 main(float2 coord) {
+    half4 color = content.eval(coord);
+    float2 uv = coord / resolution;
+    float scan = sin((uv.y * 160.0) + time * 6.0) * 0.035;
+    half3 holo = half3(0.20 + scan, 0.85, 1.0);
+    return half4(mix(color.rgb, holo, 0.22), color.a);
+}
+

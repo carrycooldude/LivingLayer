@@ -1,0 +1,9 @@
+uniform shader content;
+
+half4 main(float2 coord) {
+    half4 color = content.eval(coord);
+    half luminance = max(max(color.r, color.g), color.b);
+    half3 glow = half3(0.10, 0.85, 1.0) * smoothstep(0.35, 1.0, luminance);
+    return half4(color.rgb + glow * 0.32, color.a);
+}
+

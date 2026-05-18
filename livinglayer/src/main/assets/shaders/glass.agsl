@@ -1,0 +1,10 @@
+uniform shader content;
+uniform float2 resolution;
+
+half4 main(float2 coord) {
+    half4 color = content.eval(coord);
+    float2 uv = coord / resolution;
+    float edge = smoothstep(0.0, 0.7, distance(uv, float2(0.5)));
+    return half4(color.rgb + half3(0.05, 0.10, 0.12) * (1.0 - edge), color.a);
+}
+
